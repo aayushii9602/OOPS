@@ -191,7 +191,6 @@ public:
     {
         cout << "print the details of Domestic user\n";
     }
-
     // void payBill()
     // {
     //     dueAmount = calculateBillOfDomestic(*this);
