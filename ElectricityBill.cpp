@@ -6,6 +6,75 @@ using namespace std;
 
 double Amount = 0.0;
 
+vector<string> login()
+{
+    vector<string> v;
+    cout << "-------------------------------------------------------------------------------------\n";
+    cout << "\033[0;32m"; //(“\033[0;31m”);
+    cout << "-------------------------------WELCOME TO THE PORTAL---------------------------------\n";
+    cout << "\033[0;35m";
+
+    string username, password, code;
+    int count;
+    while (1)
+    {
+        string u, p, x;
+        cout << "Press 'A' if you are Admin\nPress 'E' if you are Employee\nPress 'U' if you are User\n ";
+        cout << "\033[0;37m";
+        cin >> code;
+        system("cls");
+        cout << "please enter the following details" << endl;
+        cout << "USERNAME :";
+        cin >> username;
+        cout << "PASSWORD :";
+        cin >> password;
+
+        ifstream input("database.txt");
+        while (input >> u >> p >> x)
+        {
+            if (u == username && p == password && x == code)
+
+            {
+                count = 1;
+                system("cls");
+            }
+        }
+        input.close();
+        if (count == 1)
+        {
+            cout << "\nHello" << username << "\n<LOGIN SUCCESSFUL>\nThanks for logging in..\n";
+            v.pb(username);
+            // v.pb(password);
+            v.pb(code);
+            return v;
+            // break;
+        }
+        else
+        {
+            cout << "\nLOGIN ERROR\nPlease check your username and password\n";
+            cout << "Do you want to EXIT?\nPress Y(YES) or N(NO)";
+            char m;
+            cin >> m;
+            if (m == 'Y')
+                exit(0);
+            else
+                continue;
+        }
+    }
+    if (count == 1)
+    {
+        v.pb(username);
+        // v.pb(password);
+        v.pb(code);
+        return v;
+    }
+    else
+    {
+        v.pb("NIL");
+        return v;
+    }
+}
+
 class InsufficientBalance
 {
 public:
@@ -292,7 +361,7 @@ public:
         {
 
             U[i]->printDetails();
-            cout << endl;
+            cout << "-------------------------------------------------------------------------------------\n";
         }
     }
 
@@ -382,35 +451,46 @@ public:
     // Return Type:  NULL
     void printDetail()
     {
+        cout << "-------------------------------------------------------------------------------------\n";
         cout << "Admin Details : " << endl;
         cout << "Name          : " << name << endl;
-        cout << "adminId       : " << adminId << endl;
+        cout << "AdminId       : " << adminId << endl;
+        cout << "Bank balance: " << bankBalance << endl;
+        cout << "-------------------------------------------------------------------------------------\n";
     }
 
+    // Function:adminViewsEmployee
+    // Description: Admin can virew the details of employee
+    // Input param:  vector of Employee, start-point , end-point
+    // Return Type:  NULL
     void adminViewsEmployee(vector<Employee> E, ll startpoint, ll endpoint)
     {
         for (ll i = startpoint; i < endpoint; i++)
         {
 
             E[i].printDetails();
-            cout << endl;
+            cout << "-------------------------------------------------------------------------------------\n";
         }
     }
 
+    // Function:adminViewsUsers
+    // Description: Admin can view the details of Users
+    // Input param:  vector of Users, start-point , end-point
+    // Return Type:  NULL
     void adminViewsUsers(vector<User *> U, ll startpoint, ll endpoint)
     {
         for (ll i = startpoint; i < endpoint; i++)
         {
 
             U[i]->printDetails();
-            cout << endl;
+            cout << "-------------------------------------------------------------------------------------\n";
         }
     }
 
     void BankBalance()
     {
         bankBalance = Amount;
-        cout << "Admin's bank balance: " << bankBalance << endl;
+        // cout << "Admin's bank balance: " << bankBalance << endl;
     }
 };
 
@@ -426,7 +506,7 @@ int main()
     E.pb(E2);
     Employee E3("7299035627", "Empe1003", "Kiran L H", "Gandhi Nagar", 22.4, 21.5);
     E.pb(E3);
-    Employee E4("9825367102", "Empe1004", "Shradha B ", "Chirtakkot", 20.34, 20.11);
+    Employee E4("9825367102", "Empe1004", "Shradha B", "Chirtakkot", 20.34, 20.11);
     E.pb(E4);
     Employee E5("9938710263", "Empe1005", "Hemant Rao", "B k Road", 21.9, 19.99);
     E.pb(E5);
@@ -455,14 +535,37 @@ int main()
     DomesticUser DU5("7555074534", "E5DU105", "Talika Gour", "8487, Arakashan Road, Pahar Ganj", 13092.0, 540);
     U.pb(&DU5);
 
+    GenerateBill B;
+    // login();
+    while (1)
+    {
+        vector<string> Checker;
+        Checker = login();
+        if (Checker[1] == "A")
+        {
+            while (1)
+            {
+                cout << "\nPress 1: To view your details\nPress 2: To view Employee Details\nPress 3: TO view All the User Details\nPress 4: TO Log out\n";
+                ll choice;
+                cin >> choice;
+                if (choice == 1)
+                    ADMIN.printDetail();
+                else if (choice == 2)
+                    ADMIN.adminViewsEmployee(E, 0, 5);
+                else if (choice == 3)
+                    ADMIN.adminViewsUsers(U, 0, 5);
+                else
+                    break;
+            }
+        }
+        }
     // E1.EmployeeViewsUser(U, 0, 10);
 
     // ADMIN.adminViewsEmployee(E, 0, 5);
 
     // ADMIN.adminViewsUsers(U, 0, 10);
 
-    GenerateBill B;
-
+    /*
     for (ll i = 0; i < 10; i++)
     {
         cout << "before transaction:\n";
@@ -474,10 +577,11 @@ int main()
         cout << "after the transaction:\n";
         U[i]->printDetails();
         cout << "-------------------------------------------------------------------------------------\n";
-    }
+    }*/
 
     // E1.changeTarrifOfCommercial(U[0]->amountPerSegmentOfUnitCommercial);
     // U[0]->payBillCommercial(B);
-    ADMIN.BankBalance();
+    // ADMIN.BankBalance();
+
     return 0;
 }
