@@ -4,6 +4,8 @@
 
 using namespace std;
 
+double Amount = 0.0;
+
 class InsufficientBalance
 {
 public:
@@ -18,48 +20,51 @@ class GenerateBill
 {
 public:
     double calculateAmountOfUser = 0.0;
+
+    // Default Constructor
     GenerateBill()
     {
         calculateAmountOfUser = 0.0;
     }
 
-    double CalculteamountOfCommercial(ll numberOfUnits)
+    double CalculteamountOfCommercial(ll numberOfUnits, vector<float> v)
     {
-        if (numberOfUnits <= 50)
+        if (numberOfUnits <= 150)
         {
-            calculateAmountOfUser = 50 * 15.75;
+            calculateAmountOfUser = 150 * v[0];
         }
-        else if (numberOfUnits > 50 && numberOfUnits <= 65)
+        else if (numberOfUnits > 150 && numberOfUnits <= 1000)
         {
-            calculateAmountOfUser = 50 * 15.75 + (numberOfUnits - 50) * 17.0;
+            calculateAmountOfUser = 150 * v[0] + (numberOfUnits - 150) * v[1];
         }
-        else if (numberOfUnits > 65 && numberOfUnits <= 100)
+        else if (numberOfUnits > 1000 && numberOfUnits <= 1700)
         {
-            calculateAmountOfUser = 50 * 15.75 + (numberOfUnits - 50) * 17.85;
+            calculateAmountOfUser = 150 * v[0] + 850 * v[1] + (numberOfUnits - 1000) * v[2];
         }
-        else if (numberOfUnits > 100)
+        else if (numberOfUnits > 1700 && numberOfUnits <= 2500)
         {
-            calculateAmountOfUser = 50 * 15.75 + (numberOfUnits - 50) * 19.75;
+            calculateAmountOfUser = 150 * v[0] + 850 * v[1] + 700 * v[3] + (numberOfUnits - 1700) * v[4];
         }
         return calculateAmountOfUser;
     }
-    double CalculteamountOfDomestic(ll numberOfUnits)
+
+    double CalculteamountOfDomestic(ll numberOfUnits, vector<float> v)
     {
         if (numberOfUnits <= 50)
         {
-            calculateAmountOfUser = 50 * 15.75;
+            calculateAmountOfUser = 50 * v[0];
         }
-        else if (numberOfUnits > 50 && numberOfUnits <= 65)
+        else if (numberOfUnits > 50 && numberOfUnits <= 100)
         {
-            calculateAmountOfUser = 50 * 15.75 + (numberOfUnits - 50) * 17.0;
+            calculateAmountOfUser = 50 * v[0] + (numberOfUnits - 50) * v[1];
         }
-        else if (numberOfUnits > 65 && numberOfUnits <= 100)
+        else if (numberOfUnits > 100 && numberOfUnits <= 170)
         {
-            calculateAmountOfUser = 50 * 15.75 + (numberOfUnits - 50) * 17.85;
+            calculateAmountOfUser = 50 * v[0] + (50) * v[1] + (numberOfUnits - 100) * v[2];
         }
-        else if (numberOfUnits > 100)
+        else if (numberOfUnits > 170 && numberOfUnits <= 250)
         {
-            calculateAmountOfUser = 50 * 15.75 + (numberOfUnits - 50) * 19.75;
+            calculateAmountOfUser = 50 * v[0] + 50 * v[1] + 70 * v[2] + (numberOfUnits - 170) * v[3];
         }
         return calculateAmountOfUser;
     }
@@ -76,12 +81,16 @@ public:
     string address;
     double bankBalance;
     double dueAmount;
+    vector<float> amountPerSegmentOfUnitCommercial;
+    vector<float> amountPerSegmentOfUnitDomestic;
     GenerateBill *B;
 
+    // Default Constructor
     User()
     {
     }
 
+    // Parameterized Constructor
     User(string phoneNumber, string userId, string name, string address, double bankBalance)
     {
         this->phoneNumber = phoneNumber;
@@ -89,8 +98,23 @@ public:
         this->name = name;
         this->address = address;
         this->bankBalance = bankBalance;
+        amountPerSegmentOfUnitCommercial.pb(7.99);
+        for (ll i = 1; i < 5; i++)
+        {
+            amountPerSegmentOfUnitCommercial.pb(7.99 + 2 * i);
+        }
+
+        amountPerSegmentOfUnitDomestic.pb(5.06);
+        for (ll i = 1; i < 4; i++)
+        {
+            amountPerSegmentOfUnitDomestic.pb(5.06 + 2 * i);
+        }
     }
 
+    // Function:printDetail
+    // Description: Prints the details of the User
+    // Input param:  NULL
+    // Return Type:  NULL
     virtual void printDetails() = 0;
     virtual void payBillDomestic(GenerateBill &B) {}
     virtual void payBillCommercial(GenerateBill &B) {}
@@ -102,12 +126,19 @@ class DomesticUser : public User
 {
 public:
     ll numberOfUnitsUsed;
+
     GenerateBill *B;
 
+    // Default Constructor
     DomesticUser() : User(), numberOfUnitsUsed(0) {}
 
+    // Parameterized Constructor
     DomesticUser(string p, string id, string n, string address, float bb, ll units) : User(p, id, n, address, bb), numberOfUnitsUsed(units) {}
 
+    // Function:printDetail
+    // Description: Prints the details of the Domestic User
+    // Input param:  NULL
+    // Return Type:  NULL
     void printDetails()
     {
         cout << "NAME         :" << name << endl;
@@ -116,12 +147,16 @@ public:
         cout << "BANK BALANCE :" << bankBalance << endl;
     }
 
+    // Function:payBillDomestic
+    // Description: calculates the total amount that is to be paid by the domestic user
+    // Input param:  NULL
+    // Return Type:  NULL
     void payBillDomestic(GenerateBill &B)
     {
 
-        dueAmount = B.CalculteamountOfDomestic(this->numberOfUnitsUsed);
+        dueAmount = B.CalculteamountOfDomestic(this->numberOfUnitsUsed, amountPerSegmentOfUnitDomestic);
         cout << "You need ot pay:" << dueAmount << endl;
-        cout << "You want to pay now??\nPrint 1 for YES and 0 for NO";
+        cout << "You want to pay now??\nPrint 1 for YES and 0 for NO\n";
         ll x;
         cin >> x;
         if (x)
@@ -129,6 +164,7 @@ public:
             if (dueAmount <= bankBalance)
             {
                 bankBalance -= dueAmount;
+                Amount += dueAmount;
                 cout << "Thanks for paying the bill\n";
             }
             else
@@ -149,10 +185,16 @@ public:
     ll numberOfUnitsUsed;
     GenerateBill *B;
 
+    // Default Constructor
     CommercialUser() : User(), numberOfUnitsUsed(0) {}
 
+    // Parameterized Constructor
     CommercialUser(string p, string id, string n, string address, float bb, ll units) : User(p, id, n, address, bb), numberOfUnitsUsed(units) {}
 
+    // Function:printDetail
+    // Description: Prints the details of the Commercial User
+    // Input param:  NULL
+    // Return Type:  NULL
     void printDetails()
     {
         cout << "NAME         :" << name << endl;
@@ -161,10 +203,14 @@ public:
         cout << "BANK BALANCE :" << bankBalance << endl;
     }
 
+    // Function:payBillCommercial
+    // Description: calculates the total amount that is to be paid by the Commercial user
+    // Input param:  NULL
+    // Return Type:  NULL
     void payBillCommercial(GenerateBill &B)
     {
 
-        dueAmount = B.CalculteamountOfCommercial(this->numberOfUnitsUsed);
+        dueAmount = B.CalculteamountOfCommercial(this->numberOfUnitsUsed, amountPerSegmentOfUnitCommercial);
         cout << "You need ot pay:" << dueAmount << endl;
         cout << "You want to pay now??\nPrint 1 for YES and 0 for NO";
         ll x;
@@ -174,6 +220,7 @@ public:
             if (dueAmount <= bankBalance)
             {
                 bankBalance -= dueAmount;
+                Amount += dueAmount;
                 cout << "Thanks for paying the bill\n";
             }
             else
@@ -201,6 +248,7 @@ public:
     double amountOfDomesticUser;
     User *USER;
 
+    // Default Constructor
     Employee()
     {
         phoneNumber = "nil";
@@ -211,6 +259,7 @@ public:
         amountOfDomesticUser = 0.0;
     }
 
+    // Parameterized Constructor
     Employee(string phoneNumber, string employeeId, string name, string area, double amountOfCommericalUser, double amountOfDomesticUser)
     {
         this->phoneNumber = phoneNumber;
@@ -221,6 +270,11 @@ public:
         this->amountOfDomesticUser = amountOfDomesticUser;
     }
 
+    // Function:printDetail
+    // Description: Prints the details of the Employee
+    // Input param:  NULL
+    // Return Type:  NULL
+
     void printDetails()
     {
         cout << "NAME         :" << name << endl;
@@ -228,6 +282,10 @@ public:
         cout << "AREA         :" << area << endl;
     }
 
+    // Function:EmployeeViewsUser
+    // Description: Employee can view all the users
+    // Input param:  User vector, startpoint, endpoint
+    // Return Type:  NULL
     void EmployeeViewsUser(vector<User *> U, ll startpoint, ll endpoint)
     {
         for (ll i = startpoint; i < endpoint; i++)
@@ -235,6 +293,56 @@ public:
 
             U[i]->printDetails();
             cout << endl;
+        }
+    }
+
+    // Function:changeTarrifOfCommercial
+    // Description: Employee can change Tarrif Of Commercial User
+    // Input param:  amount Per Segment Of Unit Commercial vector
+    // Return Type:  NULL
+
+    void changeTarrifOfCommercial(vector<float> &v)
+    {
+        for (ll i = 0; i < v.size(); i++)
+        {
+            cout << "Dou you want to change the value of first 150 units that is: " << v[i] << endl;
+            cout << "Type 1 to change , Type 0 to continue\n ";
+            ll x;
+            cin >> x;
+            if (x)
+            {
+                cout << "Enter the new amount:\n";
+                float value;
+                cin >> value;
+                v[i] = value;
+            }
+            else
+                continue;
+        }
+    }
+
+    // Function:changeTarrifOfDomestic
+    // Description: Employee can change Tarrif Of Domestic User
+    // Input param:  amount Per Segment Of Unit Domestic vector
+    // Return Type:  NULL
+
+    void changeTarrifOfDomestic(vector<float> &v)
+    {
+        for (ll i = 0; i < v.size(); i++)
+        {
+            cout << "Dou you want to change the value of first 150 units that is: " << v[i] << endl;
+            cout << "Type 1 to change , Type 0 to continue\n ";
+            ll x;
+            cin >> x;
+            if (x)
+            {
+                cout << "Enter the new amount:\n";
+                float value;
+                cin >> value;
+                v[i] = value;
+            }
+            else
+                continue;
         }
     }
 };
@@ -250,6 +358,7 @@ public:
     string name;
     Employee *Emp;
 
+    // Default Constructor
     Admin()
     {
         phoneNumber = "nil";
@@ -258,6 +367,7 @@ public:
         bankBalance = 0.0;
     }
 
+    // Parameterized Constructor
     Admin(string phoneNumber, string adminId, string name, double bankBalance)
     {
         this->phoneNumber = phoneNumber;
@@ -266,6 +376,10 @@ public:
         this->bankBalance = bankBalance;
     }
 
+    // Function:printDetail
+    // Description: Prints the details of the Admin
+    // Input param:  NULL
+    // Return Type:  NULL
     void printDetail()
     {
         cout << "Admin Details : " << endl;
@@ -292,11 +406,17 @@ public:
             cout << endl;
         }
     }
+
+    void BankBalance()
+    {
+        bankBalance = Amount;
+        cout << "Admin's bank balance: " << bankBalance << endl;
+    }
 };
 
 int main()
 {
-    Admin Admin("9810896298", "ADMIN1", "Vasant Kumar", 190000.0);
+    Admin ADMIN("9810896298", "ADMIN1", "Vasant Kumar", 190000.0);
 
     vector<Employee> E;
 
@@ -335,14 +455,14 @@ int main()
     DomesticUser DU5("7555074534", "E5DU105", "Talika Gour", "8487, Arakashan Road, Pahar Ganj", 13092.0, 540);
     U.pb(&DU5);
 
-    E1.EmployeeViewsUser(U, 0, 10);
+    // E1.EmployeeViewsUser(U, 0, 10);
 
-    Admin.adminViewsEmployee(E, 0, 5);
+    // ADMIN.adminViewsEmployee(E, 0, 5);
 
-    // Admin.adminViewsUsers(U, 0, 10);
+    // ADMIN.adminViewsUsers(U, 0, 10);
 
-    /*
     GenerateBill B;
+
     for (ll i = 0; i < 10; i++)
     {
         cout << "before transaction:\n";
@@ -355,6 +475,9 @@ int main()
         U[i]->printDetails();
         cout << "-------------------------------------------------------------------------------------\n";
     }
-    */
+
+    // E1.changeTarrifOfCommercial(U[0]->amountPerSegmentOfUnitCommercial);
+    // U[0]->payBillCommercial(B);
+    ADMIN.BankBalance();
     return 0;
 }
