@@ -4,7 +4,12 @@
 
 using namespace std;
 
-double Amount = 0.0;
+double Amount = 0.0; // global viarble to store the total amount that is to be credited to Admin's account
+
+// Function:printDetail
+// Description: Prints the details of the User
+// Input param:  NULL
+// Return Type:  vector of string
 
 vector<string> login()
 {
@@ -14,75 +19,113 @@ vector<string> login()
     cout << "-------------------------------WELCOME TO THE PORTAL---------------------------------\n";
     cout << "\033[0;35m";
 
-    string username, password, code;
-    int count;
-    while (1)
+    cout << "Press 1 to continue\nPress 0 to exit form the portal\n";
+    ll ans;
+    cin >> ans;
+    if (ans == 0)
+        exit(0);
+    else
     {
-        string u, p, x;
-        cout << "Press 'A' if you are Admin\nPress 'E' if you are Employee\nPress 'U' if you are User\n ";
-        cout << "\033[0;37m";
-        cin >> code;
-        system("cls");
-        cout << "please enter the following details" << endl;
-        cout << "USERNAME :";
-        cin >> username;
-        cout << "PASSWORD :";
-        cin >> password;
-
-        ifstream input("database.txt");
-        while (input >> u >> p >> x)
+        string username, password, code;
+        int count;
+        while (1)
         {
-            if (u == username && p == password && x == code)
+            string u, p, x;
+            cout << "Press 'A' if you are Admin\nPress 'E' if you are Employee\nPress 'U' if you are User\n";
+            cout << "\033[0;37m";
+            cin >> code;
+            system("cls");
+            cout << "please enter the following details" << endl;
+            cout << "USERNAME :";
+            cin >> username;
+            cout << "PASSWORD :";
+            cin >> password;
 
+            ifstream input("database.txt");
+            while (input >> u >> p >> x)
             {
-                count = 1;
-                system("cls");
+                if (u == username && p == password && x == code)
+
+                {
+                    count = 1;
+                    system("cls");
+                }
+            }
+            input.close();
+            if (count == 1)
+            {
+                cout << "\nHello" << username << "\n<LOGIN SUCCESSFUL>\nThanks for logging in..\n";
+                v.pb(username);
+                // v.pb(password);
+                v.pb(code);
+                return v;
+                // break;
+            }
+            else
+            {
+                cout << "\nLOGIN ERROR\nPlease check your username and password\n";
+                cout << "Do you want to EXIT?\nPress Y(YES) or N(NO)";
+                char m;
+                cin >> m;
+                if (m == 'Y')
+                    exit(0);
+                else
+                    continue;
             }
         }
-        input.close();
         if (count == 1)
         {
-            cout << "\nHello" << username << "\n<LOGIN SUCCESSFUL>\nThanks for logging in..\n";
             v.pb(username);
             // v.pb(password);
             v.pb(code);
             return v;
-            // break;
         }
         else
         {
-            cout << "\nLOGIN ERROR\nPlease check your username and password\n";
-            cout << "Do you want to EXIT?\nPress Y(YES) or N(NO)";
-            char m;
-            cin >> m;
-            if (m == 'Y')
-                exit(0);
-            else
-                continue;
+            v.pb("NIL");
+            return v;
         }
-    }
-    if (count == 1)
-    {
-        v.pb(username);
-        // v.pb(password);
-        v.pb(code);
-        return v;
-    }
-    else
-    {
-        v.pb("NIL");
-        return v;
     }
 }
 
 class InsufficientBalance
 {
 public:
+    string msg;
+    // Constructor
+    InsufficientBalance(string msg)
+    {
+        this->msg = msg;
+    }
+
+    // Function:what
+    // Description: return the Insufficient balance message
+    // Input param:  message string
+    // Return Type:  string
+    string what()
+    {
+        return msg;
+    }
 };
 
 class InvalidUnits
 {
 public:
+    string msg;
+    // Constructor
+    InvalidUnits(string msg)
+    {
+        this->msg = msg;
+    }
+
+    // Function:what
+    // Description: return the invalid number of Units message
+    // Input param:  message string
+    // Return Type:  string
+    string what()
+    {
+        return msg;
+    }
 };
 
 class GenerateBill
@@ -96,6 +139,10 @@ public:
         calculateAmountOfUser = 0.0;
     }
 
+    // Function:CalculteamountOfCommercial
+    // Description: calculates the total amount that commercial user has to pay.
+    // Input param:  number of units, vector of amount Per Segment Of Unit Commercial
+    // Return Type:  double
     double CalculteamountOfCommercial(ll numberOfUnits, vector<float> v)
     {
         if (numberOfUnits <= 150)
@@ -116,6 +163,11 @@ public:
         }
         return calculateAmountOfUser;
     }
+
+    // Function:CalculteamountOfDomestic
+    // Description: calculates the total amount that domestic user has to pay.
+    // Input param:  number of units, vector of amount Per Segment Of Unit Domestic
+    // Return Type:  double
 
     double CalculteamountOfDomestic(ll numberOfUnits, vector<float> v)
     {
@@ -220,10 +272,10 @@ public:
     // Description: calculates the total amount that is to be paid by the domestic user
     // Input param:  NULL
     // Return Type:  NULL
-    void payBillDomestic(GenerateBill &B)
+    void payBillDomestic(GenerateBill *B)
     {
 
-        dueAmount = B.CalculteamountOfDomestic(this->numberOfUnitsUsed, amountPerSegmentOfUnitDomestic);
+        dueAmount = B->CalculteamountOfDomestic(this->numberOfUnitsUsed, amountPerSegmentOfUnitDomestic);
         cout << "You need ot pay:" << dueAmount << endl;
         cout << "You want to pay now??\nPrint 1 for YES and 0 for NO\n";
         ll x;
@@ -276,10 +328,10 @@ public:
     // Description: calculates the total amount that is to be paid by the Commercial user
     // Input param:  NULL
     // Return Type:  NULL
-    void payBillCommercial(GenerateBill &B)
+    void payBillCommercial(GenerateBill *B)
     {
 
-        dueAmount = B.CalculteamountOfCommercial(this->numberOfUnitsUsed, amountPerSegmentOfUnitCommercial);
+        dueAmount = B->CalculteamountOfCommercial(this->numberOfUnitsUsed, amountPerSegmentOfUnitCommercial);
         cout << "You need ot pay:" << dueAmount << endl;
         cout << "You want to pay now??\nPrint 1 for YES and 0 for NO";
         ll x;
@@ -313,8 +365,6 @@ private:
 public:
     string name;
     string employeeId;
-    double amountOfCommericalUser;
-    double amountOfDomesticUser;
     User *USER;
 
     // Default Constructor
@@ -324,19 +374,15 @@ public:
         employeeId = "nil";
         name = "nil";
         area = "nil";
-        amountOfCommericalUser = 0.0;
-        amountOfDomesticUser = 0.0;
     }
 
     // Parameterized Constructor
-    Employee(string phoneNumber, string employeeId, string name, string area, double amountOfCommericalUser, double amountOfDomesticUser)
+    Employee(string phoneNumber, string employeeId, string name, string area)
     {
         this->phoneNumber = phoneNumber;
         this->employeeId = employeeId;
         this->name = name;
         this->area = area;
-        this->amountOfCommericalUser = amountOfCommericalUser;
-        this->amountOfDomesticUser = amountOfDomesticUser;
     }
 
     // Function:printDetail
@@ -374,7 +420,7 @@ public:
     {
         for (ll i = 0; i < v.size(); i++)
         {
-            cout << "Dou you want to change the value of first 150 units that is: " << v[i] << endl;
+            cout << "Do you want to change the value of " << i + 1 << " segment, which is: " << v[i] << endl;
             cout << "Type 1 to change , Type 0 to continue\n ";
             ll x;
             cin >> x;
@@ -399,7 +445,7 @@ public:
     {
         for (ll i = 0; i < v.size(); i++)
         {
-            cout << "Dou you want to change the value of first 150 units that is: " << v[i] << endl;
+            cout << "Do you want to change the value of " << i + 1 << " segment, which is: " << v[i] << endl;
             cout << "Type 1 to change , Type 0 to continue\n ";
             ll x;
             cin >> x;
@@ -421,8 +467,7 @@ class Admin
 private:
     string phoneNumber;
     double bankBalance;
-
-public:
+    static Admin *instance;
     string adminId;
     string name;
     Employee *Emp;
@@ -436,33 +481,52 @@ public:
         bankBalance = 0.0;
     }
 
-    // Parameterized Constructor
-    Admin(string phoneNumber, string adminId, string name, double bankBalance)
+public:
+    static Admin *getinstance()
     {
-        this->phoneNumber = phoneNumber;
-        this->adminId = adminId;
-        this->name = name;
-        this->bankBalance = bankBalance;
+        if (!instance)
+            instance = new Admin; // alloacting in heap memory
+        return instance;
     }
 
     // Function:printDetail
     // Description: Prints the details of the Admin
     // Input param:  NULL
     // Return Type:  NULL
-    void printDetail()
+
+    void printDetails()
     {
-        cout << "-------------------------------------------------------------------------------------\n";
-        cout << "Admin Details : " << endl;
-        cout << "Name          : " << name << endl;
-        cout << "AdminId       : " << adminId << endl;
-        cout << "Bank balance: " << bankBalance << endl;
-        cout << "-------------------------------------------------------------------------------------\n";
+        cout << "Admin Details :" << endl;
+        cout << "Name          :" << this->name << endl;
+        cout << "adminId       :" << this->adminId << endl;
+        cout << "Bank Balance  :" << this->bankBalance << endl;
+    }
+
+    // Function:setname
+    // Description: sets the admin name
+    // Input param:  name
+    // Return Type:  NULL
+
+    void setname(string name)
+    {
+        this->name = name;
+    }
+
+    // Function:setAdminId
+    // Description: sets the admin Id
+    // Input param:  admin Id
+    // Return Type:  NULL
+
+    void setAdminId(string adminId)
+    {
+        this->adminId = adminId;
     }
 
     // Function:adminViewsEmployee
     // Description: Admin can virew the details of employee
     // Input param:  vector of Employee, start-point , end-point
     // Return Type:  NULL
+
     void adminViewsEmployee(vector<Employee> E, ll startpoint, ll endpoint)
     {
         for (ll i = startpoint; i < endpoint; i++)
@@ -477,6 +541,7 @@ public:
     // Description: Admin can view the details of Users
     // Input param:  vector of Users, start-point , end-point
     // Return Type:  NULL
+
     void adminViewsUsers(vector<User *> U, ll startpoint, ll endpoint)
     {
         for (ll i = startpoint; i < endpoint; i++)
@@ -487,28 +552,45 @@ public:
         }
     }
 
-    void BankBalance()
+    // Function:setBankBalance
+    // Description: gives the bank balance of admin
+    // Input param:  NULL
+    // Return Type:  double
+
+    double getBankBalance()
     {
-        bankBalance = Amount;
-        // cout << "Admin's bank balance: " << bankBalance << endl;
+        return this->bankBalance;
+    }
+
+    // Function:setBankBalance
+    // Description: updates the admin's bank balance
+    // Input param:  bankBalance
+    // Return Type:  NULL
+
+    void setBankBalance(double x)
+    {
+        this->bankBalance = x;
     }
 };
 
+Admin *Admin::instance = 0;
+
 int main()
 {
-    Admin ADMIN("9810896298", "ADMIN1", "Vasant Kumar", 190000.0);
+
+    Admin *a = a->getinstance();
 
     vector<Employee> E;
 
-    Employee E1("9959152837", "Empe1001", "Sumit Sharma", "Vidhyanagar", 22.4, 20.89);
+    Employee E1("9959152837", "Empe1001", "Sumit Sharma", "Vidhyanagar");
     E.pb(E1);
-    Employee E2("8923451910", "Empe1002", "Rekha Jain", "Gokul Road", 23.0, 22.9);
+    Employee E2("8923451910", "Empe1002", "Rekha Jain", "Gokul Road");
     E.pb(E2);
-    Employee E3("7299035627", "Empe1003", "Kiran L H", "Gandhi Nagar", 22.4, 21.5);
+    Employee E3("7299035627", "Empe1003", "Kiran L H", "Gandhi Nagar");
     E.pb(E3);
-    Employee E4("9825367102", "Empe1004", "Shradha B", "Chirtakkot", 20.34, 20.11);
+    Employee E4("9825367102", "Empe1004", "Shradha B", "Chirtakkot");
     E.pb(E4);
-    Employee E5("9938710263", "Empe1005", "Hemant Rao", "B k Road", 21.9, 19.99);
+    Employee E5("9938710263", "Empe1005", "Hemant Rao", "B k Road");
     E.pb(E5);
 
     vector<User *> U;
@@ -523,17 +605,37 @@ int main()
     U.pb(&CU4);
     CommercialUser CU5("8127399830", "E5CU105", "Harish", "No 2, 2nd Main Road, Gandhinagar", 183092.0, 2240);
     U.pb(&CU5);
+    CommercialUser CU6("8654297516", "E1CU106", "Saira", "3/22, Vidyanagar", 15001.0, 440);
+    U.pb(&CU6);
+    CommercialUser CU7("9788547621", "E2CU107", "Kumar", "III Link Road, Vazira, Borivali", 12504.0, 320);
+    U.pb(&CU7);
+    CommercialUser CU8("9004507861", "E3CU108", "Priyesh", "NO88, Srinivasa Nagar, 2NS Main Road", 14589.0, 784);
+    U.pb(&CU8);
+    CommercialUser CU9("9307842655", "E4CU109", "Sejal", "BMC Software, Kolkata", 25000.0, 445);
+    U.pb(&CU9);
+    CommercialUser CU10("7878412578", "E5CU1010", "Ahaaan", "Life Style International Pvt. Ltd., Main Road", 20000.0, 740);
+    U.pb(&CU10);
 
-    DomesticUser DU1("9755528687", "E1DU101", "Aravind Sama", "Govt. Ind Est, Charkop Naka,", 9429.78, 77);
+    DomesticUser DU1("9755528687", "E1DU101", "Aravind", "Govt. Ind Est, Charkop Naka,", 9429.78, 77);
     U.pb(&DU1);
-    DomesticUser DU2("8555393361", "E2DU102", "Dhriti Dar", "G, Vardaan House, Darya Ganj", 10345.8, 118);
+    DomesticUser DU2("8555393361", "E2DU102", "Dhrit", "G, Vardaan House, Darya Ganj", 10345.8, 118);
     U.pb(&DU2);
-    DomesticUser DU3("7555110402", "E3DU103", "Manu Chaudhari ", "Khernagar, Kajal Plastics Near Uttam Book Depo, Bandra (east)", 20000.0, 380);
+    DomesticUser DU3("7555110402", "E3DU103", "Manu", "Khernagar, Kajal Plastics Near Uttam Book Depo, Bandra (east)", 20000.0, 380);
     U.pb(&DU3);
-    DomesticUser DU4("9655585472", "E4DU104", "Abhinav Mody", "710, Mittal Towers, 7th Floor,a Wing M G Road, M G Road", 1730.0, 300);
+    DomesticUser DU4("9655585472", "E4DU104", "Abhinav", "710, Mittal Towers, 7th Floor,a Wing M G Road, M G Road", 1730.0, 300);
     U.pb(&DU4);
-    DomesticUser DU5("7555074534", "E5DU105", "Talika Gour", "8487, Arakashan Road, Pahar Ganj", 13092.0, 540);
+    DomesticUser DU5("7555074534", "E5DU105", "Talika", "8487, Arakashan Road, Pahar Ganj", 13092.0, 540);
     U.pb(&DU5);
+    DomesticUser DU6("7888594625", "E1DU106", "Sunaina", "13/9, Daksha Bldg, Vallabh Baug Lane", 7025.26, 250);
+    U.pb(&DU6);
+    DomesticUser DU7("9878565854", "E2DU107", "Kartik", "523, Lotus Homes, Sector-4", 14250.25, 214);
+    U.pb(&DU7);
+    DomesticUser DU8("8348457865", "E3DU108", "Arjun ", "Green Homes, Mango Road", 20250.0, 420);
+    U.pb(&DU8);
+    DomesticUser DU9("9678654585", "E4DU109", "Apeksha", "K-74, Kendriya Vihar, Sector-12", 1543.0, 100);
+    U.pb(&DU9);
+    DomesticUser DU10("7854587456", "E5DU1010", "Ankita", "22, Vasant Kunj, near Apollo Hospital ", 10254.0, 140);
+    U.pb(&DU10);
 
     GenerateBill B;
     // login();
@@ -549,39 +651,150 @@ int main()
                 ll choice;
                 cin >> choice;
                 if (choice == 1)
-                    ADMIN.printDetail();
+                {
+                    a->setname("Vasant Kumar");
+                    a->setAdminId("ADMIN1");
+                    a->setBankBalance(190000.0);
+                    a->printDetails();
+                }
                 else if (choice == 2)
-                    ADMIN.adminViewsEmployee(E, 0, 5);
+                    a->adminViewsEmployee(E, 0, E.size());
                 else if (choice == 3)
-                    ADMIN.adminViewsUsers(U, 0, 5);
+                    a->adminViewsUsers(U, 0, U.size());
                 else
                     break;
             }
         }
+
+        else if (Checker[1] == "E")
+        {
+            Employee TestEmp;
+            for (ll i = 0; i < E.size(); i++)
+            {
+                if (Checker[0] == E[i].employeeId)
+                {
+                    TestEmp = E[i];
+                    break;
+                }
+            }
+            while (1)
+            {
+                cout << "\nPress 1: To view your details\nPress 2: TO view All the User Details\nPress 3: To change the tariff of the commercial user\n Press 4: to change the tariff od domestic user\nPress 5 : TO Log out\n ";
+                ll choice;
+                cin >> choice;
+                if (choice == 1)
+                    TestEmp.printDetails();
+                else if (choice == 2)
+                    TestEmp.EmployeeViewsUser(U, 0, U.size());
+                else if (choice == 3)
+                    TestEmp.changeTarrifOfCommercial(U[0]->amountPerSegmentOfUnitCommercial);
+                else if (choice == 4)
+                    TestEmp.changeTarrifOfDomestic(U[9]->amountPerSegmentOfUnitDomestic);
+                else
+                    break;
+            }
         }
-    // E1.EmployeeViewsUser(U, 0, 10);
 
-    // ADMIN.adminViewsEmployee(E, 0, 5);
+        else if (Checker[1] == "U")
+        {
+            /*CommercialUser testCU;
+            DomesticUser testDU;
+            ll flag = 0;
+            for (ll i = 0; i < U.size(); i++)
+            {
 
-    // ADMIN.adminViewsUsers(U, 0, 10);
+                if (Checker[0] == U[i]->userId)
+                {
+                    if (U[i]->userId[2] == 'C')
+                    {
+                        testCU = dynamic_cast<CommercialUser>(U[i]);
+                        flag = 1;
+                        break;
+                    }
+                }
+                else
+                {
+                    testDU = *U[i];
+                    flag = 2;
+                    break;
+                }
+            }
+            if (flag == 1)
+            {
+                while (1)
+                {
+                    cout << "Press 1:To print your Details\nPress 2: to Pay your Bill\nPress 3: to check Due amount\nPress 4: To LOG-OUT";
+                    ll choice;
+                    cin >> choice;
+                    if (choice == 1)
+                        testCU->printDetails();
+                    if (choice == 2)
+                        testCU->payBillCommercial(B);
+                    if (choice == 3)
+                        cout << "Yout due Amount =" << testCU->dueAmount << endl;
+                    if (choice == 4)
+                        break;
+                }
+            }
+            else if (flag == 2)
+            {
+                while (1)
+                {
+                    cout << "Press 1:To print your Details\nPress 2: to Pay your Bill\nPress 3: to check Due amount\nPress 4: To LOG-OUT";
+                    ll choice;
+                    cin >> choice;
+                    if (choice == 1)
+                        testDU.printDetails();
+                    if (choice == 2)
+                        testDU.payBillDomestic(B);
+                    if (choice == 3)
+                        cout << "Yout due Amount =" << testDU.dueAmount << endl;
+                    if (choice == 4)
+                        break;
+                }
+            }
+            else
+            {
+                cout << "No such user exist\n";
+                break;
+            }*/
+        }
+    }
 
-    /*
-    for (ll i = 0; i < 10; i++)
+    try
     {
-        cout << "before transaction:\n";
-        U[i]->printDetails();
-        if (U[i]->userId[2] == 'C')
-            U[i]->payBillCommercial(B);
-        else
-            U[i]->payBillDomestic(B);
-        cout << "after the transaction:\n";
-        U[i]->printDetails();
-        cout << "-------------------------------------------------------------------------------------\n";
-    }*/
+        CU1.payBillCommercial(&B);
+        CU2.payBillCommercial(&B);
+        CU3.payBillCommercial(&B);
+        DU4.payBillDomestic(&B);
+        DU5.payBillDomestic(&B);
+        DU6.payBillDomestic(&B);
+    }
+    catch (InvalidUnits &i)
+    {
+        cout << endl;
+        cout << i.what() << endl;
+        cout << endl;
+    }
+    try
+    {
+        CU1.payBillCommercial(&B);
+        CU7.payBillCommercial(&B);
+        CU9.payBillCommercial(&B);
+        CU3.payBillCommercial(&B);
+        CU5.payBillCommercial(&B);
 
-    // E1.changeTarrifOfCommercial(U[0]->amountPerSegmentOfUnitCommercial);
-    // U[0]->payBillCommercial(B);
-    // ADMIN.BankBalance();
-
+        DU1.payBillDomestic(&B);
+        DU2.payBillDomestic(&B);
+        DU7.payBillDomestic(&B);
+        DU6.payBillDomestic(&B);
+        DU8.payBillDomestic(&B);
+    }
+    catch (InsufficientBalance &s)
+    {
+        cout << endl;
+        cout << s.what() << endl;
+        cout << endl;
+    }
     return 0;
 }
