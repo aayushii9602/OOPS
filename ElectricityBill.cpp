@@ -1,10 +1,11 @@
+/* This is edited by aayushi on master branch*/
 #include <bits/stdc++.h>
 #define ll long long int
 #define pb push_back
 
 using namespace std;
 
-double Amount = 0.0; // global viarble to store the total amount that is to be credited to Admin's account
+double Amount; // global viarble to store the total amount that is to be credited to Admin's account
 
 // Function:printDetail
 // Description: Prints the details of the User
@@ -16,10 +17,10 @@ vector<string> login()
     vector<string> v;
     cout << "-------------------------------------------------------------------------------------\n";
     cout << "\033[0;32m"; //(“\033[0;31m”);
-    cout << "-------------------------------WELCOME TO THE PORTAL---------------------------------\n";
+    cout << "-------------------------------WELCOME TO THE SYSTEM---------------------------------\n";
     cout << "\033[0;35m";
 
-    cout << "Press 1 to continue\nPress 0 to exit form the portal\n";
+    cout << "Press 1 to CONTINUE\nPress 0 to EXIT\n";
     ll ans;
     cin >> ans;
     if (ans == 0)
@@ -284,9 +285,14 @@ public:
         {
             if (dueAmount <= bankBalance)
             {
+                cout << "User Details before the transcation\n";
+                this->printDetails();
                 bankBalance -= dueAmount;
                 Amount += dueAmount;
+                dueAmount = 0;
                 cout << "Thanks for paying the bill\n";
+                cout << "User Details after the transcation\n";
+                this->printDetails();
             }
             else
             {
@@ -340,9 +346,14 @@ public:
         {
             if (dueAmount <= bankBalance)
             {
+                cout << "User Details before the transcation\n";
+                this->printDetails();
                 bankBalance -= dueAmount;
                 Amount += dueAmount;
+                dueAmount = 0;
                 cout << "Thanks for paying the bill\n";
+                cout << "User Details after the transcation\n";
+                this->printDetails();
             }
             else
             {
@@ -569,7 +580,7 @@ public:
 
     void setBankBalance(double x)
     {
-        this->bankBalance = x;
+        this->bankBalance += x;
     }
 };
 
@@ -594,49 +605,72 @@ int main()
     E.pb(E5);
 
     vector<User *> U;
+    vector<CommercialUser> CU;
+    vector<DomesticUser> DU;
 
     CommercialUser CU1("9826371820", "E1CU101", "somanath", "9-10, Bhagirath Industrial Esta", 94290.78, 770);
     U.pb(&CU1);
+    CU.pb(CU1);
     CommercialUser CU2("7792235468", "E2CU102", "Shekhar", "5, Somasundara Mudali St,Parrys", 103405.8, 1180);
     U.pb(&CU2);
+    CU.pb(CU2);
     CommercialUser CU3("9825112230", "E3CU103", "Lata ", "47/48, Fm Cariappa Road", 201000.0, 980);
     U.pb(&CU3);
+    CU.pb(CU3);
     CommercialUser CU4("7816352901", "E4CU104", "Muskan", "8b,Lindsay Street, New Market", 10730.0, 9100);
     U.pb(&CU4);
+    CU.pb(CU4);
     CommercialUser CU5("8127399830", "E5CU105", "Harish", "No 2, 2nd Main Road, Gandhinagar", 183092.0, 2240);
     U.pb(&CU5);
+    CU.pb(CU5);
     CommercialUser CU6("8654297516", "E1CU106", "Saira", "3/22, Vidyanagar", 15001.0, 440);
     U.pb(&CU6);
+    CU.pb(CU6);
     CommercialUser CU7("9788547621", "E2CU107", "Kumar", "III Link Road, Vazira, Borivali", 12504.0, 320);
     U.pb(&CU7);
+    CU.pb(CU7);
     CommercialUser CU8("9004507861", "E3CU108", "Priyesh", "NO88, Srinivasa Nagar, 2NS Main Road", 14589.0, 784);
     U.pb(&CU8);
+    CU.pb(CU8);
     CommercialUser CU9("9307842655", "E4CU109", "Sejal", "BMC Software, Kolkata", 25000.0, 445);
     U.pb(&CU9);
+    CU.pb(CU9);
     CommercialUser CU10("7878412578", "E5CU1010", "Ahaaan", "Life Style International Pvt. Ltd., Main Road", 20000.0, 740);
     U.pb(&CU10);
+    CU.pb(CU10);
 
     DomesticUser DU1("9755528687", "E1DU101", "Aravind", "Govt. Ind Est, Charkop Naka,", 9429.78, 77);
     U.pb(&DU1);
+    DU.pb(DU1);
     DomesticUser DU2("8555393361", "E2DU102", "Dhrit", "G, Vardaan House, Darya Ganj", 10345.8, 118);
     U.pb(&DU2);
+    DU.pb(DU2);
     DomesticUser DU3("7555110402", "E3DU103", "Manu", "Khernagar, Kajal Plastics Near Uttam Book Depo, Bandra (east)", 20000.0, 380);
     U.pb(&DU3);
+    DU.pb(DU3);
     DomesticUser DU4("9655585472", "E4DU104", "Abhinav", "710, Mittal Towers, 7th Floor,a Wing M G Road, M G Road", 1730.0, 300);
     U.pb(&DU4);
+    DU.pb(DU4);
     DomesticUser DU5("7555074534", "E5DU105", "Talika", "8487, Arakashan Road, Pahar Ganj", 13092.0, 540);
     U.pb(&DU5);
+    DU.pb(DU5);
     DomesticUser DU6("7888594625", "E1DU106", "Sunaina", "13/9, Daksha Bldg, Vallabh Baug Lane", 7025.26, 250);
     U.pb(&DU6);
+    DU.pb(DU6);
     DomesticUser DU7("9878565854", "E2DU107", "Kartik", "523, Lotus Homes, Sector-4", 14250.25, 214);
     U.pb(&DU7);
+    DU.pb(DU7);
     DomesticUser DU8("8348457865", "E3DU108", "Arjun ", "Green Homes, Mango Road", 20250.0, 420);
     U.pb(&DU8);
+    DU.pb(DU8);
     DomesticUser DU9("9678654585", "E4DU109", "Apeksha", "K-74, Kendriya Vihar, Sector-12", 1543.0, 100);
     U.pb(&DU9);
+    DU.pb(DU9);
     DomesticUser DU10("7854587456", "E5DU1010", "Ankita", "22, Vasant Kunj, near Apollo Hospital ", 10254.0, 140);
     U.pb(&DU10);
+    DU.pb(DU10);
 
+    cout << CU.size() << endl;
     GenerateBill B;
     // login();
     while (1)
@@ -647,7 +681,7 @@ int main()
         {
             while (1)
             {
-                cout << "\nPress 1: To view your details\nPress 2: To view Employee Details\nPress 3: TO view All the User Details\nPress 4: TO Log out\n";
+                cout << "\nPress 1: To view your details\nPress 2: To view Employee Details\nPress 3: TO view All the User Details\nPress 4: To check the total revenue generated\nPress 5: TO Log out\n";
                 ll choice;
                 cin >> choice;
                 if (choice == 1)
@@ -655,12 +689,18 @@ int main()
                     a->setname("Vasant Kumar");
                     a->setAdminId("ADMIN1");
                     a->setBankBalance(190000.0);
+                    // Amount = 0.0;
                     a->printDetails();
                 }
                 else if (choice == 2)
                     a->adminViewsEmployee(E, 0, E.size());
                 else if (choice == 3)
                     a->adminViewsUsers(U, 0, U.size());
+                else if (choice == 4)
+                {
+                    a->setBankBalance(Amount);
+                    cout << "Total revenue generated :" << Amount << endl;
+                }
                 else
                     break;
             }
@@ -697,70 +737,48 @@ int main()
 
         else if (Checker[1] == "U")
         {
-            /*CommercialUser testCU;
-            DomesticUser testDU;
-            ll flag = 0;
-            for (ll i = 0; i < U.size(); i++)
+            for (ll i = 0; i < CU.size(); i++)
             {
-
-                if (Checker[0] == U[i]->userId)
+                if (Checker[0] == CU[i].userId)
                 {
-                    if (U[i]->userId[2] == 'C')
+                    while (1)
                     {
-                        testCU = dynamic_cast<CommercialUser>(U[i]);
-                        flag = 1;
-                        break;
+                        cout << "Press 1:To print your Details\nPress 2: to Pay your Bill\nPress 3: To LOG-OUT\n";
+                        ll choice;
+                        cin >> choice;
+                        if (choice == 1)
+                            CU[i].printDetails();
+                        if (choice == 2)
+                            CU[i].payBillCommercial(&B);
+                        if (choice == 3)
+                            break;
                     }
-                }
-                else
-                {
-                    testDU = *U[i];
-                    flag = 2;
                     break;
                 }
             }
-            if (flag == 1)
+            for (ll i = 0; i < DU.size(); i++)
             {
-                while (1)
+                if (Checker[0] == DU[i].userId)
                 {
-                    cout << "Press 1:To print your Details\nPress 2: to Pay your Bill\nPress 3: to check Due amount\nPress 4: To LOG-OUT";
-                    ll choice;
-                    cin >> choice;
-                    if (choice == 1)
-                        testCU->printDetails();
-                    if (choice == 2)
-                        testCU->payBillCommercial(B);
-                    if (choice == 3)
-                        cout << "Yout due Amount =" << testCU->dueAmount << endl;
-                    if (choice == 4)
-                        break;
+                    while (1)
+                    {
+                        cout << "Press 1:To print your Details\nPress 2: to Pay your Bill\nPress 3: To LOG-OUT\n";
+                        ll choice;
+                        cin >> choice;
+                        if (choice == 1)
+                            DU[i].printDetails();
+                        if (choice == 2)
+                            DU[i].payBillDomestic(&B);
+                        if (choice == 3)
+                            break;
+                    }
+
+                    // flag = 2;
+                    break;
                 }
             }
-            else if (flag == 2)
-            {
-                while (1)
-                {
-                    cout << "Press 1:To print your Details\nPress 2: to Pay your Bill\nPress 3: to check Due amount\nPress 4: To LOG-OUT";
-                    ll choice;
-                    cin >> choice;
-                    if (choice == 1)
-                        testDU.printDetails();
-                    if (choice == 2)
-                        testDU.payBillDomestic(B);
-                    if (choice == 3)
-                        cout << "Yout due Amount =" << testDU.dueAmount << endl;
-                    if (choice == 4)
-                        break;
-                }
-            }
-            else
-            {
-                cout << "No such user exist\n";
-                break;
-            }*/
         }
     }
-
     try
     {
         CU1.payBillCommercial(&B);
